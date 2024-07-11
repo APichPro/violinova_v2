@@ -96,6 +96,8 @@ const Player = () => {
         // hidden: !audio?.audioUrl || audio?.audioUrl === "",
       })}
     >
+      <div id="audio"></div>
+      
       {/* change the color for indicator inside the Progress component in ui folder */}
       {/* <Progress
         value={(currentTime / duration) * 100}
