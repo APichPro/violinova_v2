@@ -20,6 +20,11 @@ export const sidebarLinks = [
     label: "Favorite",
   },
   {
+    imgURL: "/icons/watch.svg",
+    route: "/note",
+    label: "Note",
+  },
+  {
     route: "/profile",
     label: "Profile",
     imgURL: "/icons/profile.svg",

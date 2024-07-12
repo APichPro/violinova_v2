@@ -4,21 +4,20 @@ import {
   TuneObject,
   synth,
   renderAbc,
-  Selector,
 } from "abcjs";
 
 let synthetizer: MidiBuffer;
 let synthControl: SynthObjectController;
 let visualObject: TuneObject;
+let progress: number;
 
 const SynthProvider = (() => {
   const initVisual = (abc: string, ref: any) => {
     visualObject = renderAbc(ref.current, abc, {
       add_classes: true,
-      clickListener: (abcelem: any) => {
-        console.log(abcelem);
-        // synth.seek(10)
-        // synthControl.setProgress((abcelem.midiPitches![0].start - 3) / 47);
+      clickListener: (classes: any) => {
+        console.log(classes);
+        synthControl.seek(classes.abselem.counters.measureTotal, "beats");
       },
     })[0];
   };
@@ -29,20 +28,35 @@ const SynthProvider = (() => {
       "#audio",
       {
         onEvent: (event: any) => {
-          console.log(event.elements![0][0]);
           const notes = document.getElementsByClassName("abcjs-note");
           Array.from(notes).forEach(
             (note) => ((note as HTMLElement).style.fill = "black")
           );
           event.elements![0][0].style.fill = "red";
+
+          const rect = event.elements![0][0].getBoundingClientRect();
+          const isVisible =
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <=
+              (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <=
+              (window.innerWidth || document.documentElement.clientWidth);
+          if (!isVisible) {
+            event.elements![0][0].scrollIntoView({
+              block: "center",
+              inline: "center",
+              behavior: "smooth",
+            });
+          }
+        },
+        onBeat(beatNumber, totalBeats, totalTime) {
+          progress = beatNumber / totalBeats;
+          // console.log(progress);
         },
       },
       {
-        displayLoop: true,
-        displayRestart: true,
-        displayPlay: true,
         displayProgress: true,
-        displayWarp: true,
       }
     );
 
@@ -71,12 +85,17 @@ const SynthProvider = (() => {
     return synthControl;
   };
 
+  const getProgress = () => {
+    return progress;
+  };
+
   return {
     initSynth,
     getSynth,
     getSynthControl,
     initVisual,
     getVisual,
+    getProgress,
   };
 })();
 

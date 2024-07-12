@@ -5,10 +5,9 @@ const Analyzer = () => {
   const [frequency, cents, note] = useAudioInput();
 
   return (
-    <div>
-      <h1>{frequency}</h1>
-      <h1>{cents}</h1>
-      <h1>{note}</h1>
+    <div className="flex justify-center flex-col text-center">
+      <h1 className="text-6xl">{note}</h1>
+      <h1 className="text-3xl">{cents}</h1>
     </div>
   );
 };

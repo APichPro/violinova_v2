@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { YIN } from "pitchfinder";
 
 const MIDDLE_A = 440;
 
@@ -65,9 +64,9 @@ function autoCorrelate( buf: any, sampleRate: any ) {
 }
 
 export function useAudioInput() {
-  const [frequency, setFrequency] = useState<number | null>();
-  const [cents, setCents] = useState<number | null>();
-  const [note, setNote] = useState<string | null>();
+  const [frequency, setFrequency] = useState<number>();
+  const [cents, setCents] = useState<number>();
+  const [note, setNote] = useState<string>();
 
 
 
@@ -77,7 +76,6 @@ export function useAudioInput() {
     const context = new AudioContext();
     const analyser = context.createAnalyser();
     let rafID = null;
-
 
     const handleSuccess = function (stream: MediaStream) {
       const source = context.createMediaStreamSource(stream);
@@ -89,39 +87,15 @@ export function useAudioInput() {
     function updatePitch() {
 	    analyser.getFloatTimeDomainData( buffer );
       var ac = autoCorrelate( buffer, context.sampleRate );
-      console.log(ac)
 
-      setFrequency(ac!)
-      setNote(noteStrings[noteFromPitch(ac!)%12])
-      setCents(centsOffFromPitch(ac!, noteFromPitch(ac!)))
+      setFrequency(ac)
+      setNote(ac != -1 ? noteStrings[noteFromPitch(ac)%12] : "N")
+      setCents(ac != -1 ?centsOffFromPitch(ac!, noteFromPitch(ac)) : 0)
 
       if (!window.requestAnimationFrame)
         window.requestAnimationFrame = window.requestAnimationFrame;
       rafID = window.requestAnimationFrame( updatePitch );
     }
-
-
-
-
-      // const processor = context.createScriptProcessor(2048, 1, 1);
-      // const detectPitch = YIN({
-      //   sampleRate: 22050,
-      //   probabilityThreshold: 0.8
-      // });
-
-      // source.connect(processor);
-      // processor.connect(context.destination);
-
-      // processor.onaudioprocess = function (e) {
-      //   // Do something with the data, e.g. convert it to WAV
-      //   // console.log(e.inputBuffer);
-      //   const float32Array = e.inputBuffer.getChannelData(0); // get a single channel of sound
-      //   const pitch = detectPitch(float32Array); // null if pitch cannot be identified
-
-        // setFrequency(pitch!)
-        // setNote(noteStrings[noteFromPitch(pitch!)%12])
-        // setCents(centsOffFromPitch(pitch!, noteFromPitch(pitch!)))
-      // };
 
     navigator.mediaDevices
       .getUserMedia({ audio: true, video: false })
