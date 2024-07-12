@@ -1,16 +1,16 @@
-"use client"
-import React, { useEffect } from 'react'
-import { useAudioInput } from "@/lib/pitch"
-
-
+"use client";
+import { useAudioInput } from "@/lib/pitch";
 
 const Analyzer = () => {
-  const frequency = useAudioInput();
-
+  const [frequency, cents, note] = useAudioInput();
 
   return (
-    <div><h1>{frequency}</h1></div>
-  )
-}
+    <div>
+      <h1>{frequency}</h1>
+      <h1>{cents}</h1>
+      <h1>{note}</h1>
+    </div>
+  );
+};
 
-export default Analyzer
+export default Analyzer;

@@ -1,11 +1,11 @@
-"use client"
-import React, { createContext, useContext, useState, useEffect } from 'react';
+"use client";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 // Create a context for the AudioContext
 const AudioContext = createContext<AudioContext | null>(null);
 
 // AudioContext Provider component
-const AudioProvider = ({ children } :  { children: React.ReactNode }) => {
+const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
 
   useEffect(() => {
