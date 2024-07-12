@@ -1,18 +1,18 @@
 "use client";
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
-import { SynthProvider } from "@/providers/SynthProvider";
+import { SynthProvider, useSynth } from "@/providers/SynthProvider";
 import ProgressBar from "./ProgressBar";
 
 const Player = () => {
   const [bpm, setBpm] = useState(100);
+  const { controlWarp, controlPlay, controlRestart, controlLoop } = useSynth();
 
   const handleChange = (event: { target: { value: any } }) => {
     setBpm(event.target.value);
-    SynthProvider.getSynthControl().setWarp(bpm);
+    controlWarp(bpm);
+    // controlWarp(bpm);
   };
 
   return (
@@ -23,28 +23,15 @@ const Player = () => {
     >
       <ProgressBar />
       <section className="glassmorphism-black flex h-[112px] w-full items-center justify-between px-4 max-md:justify-center max-md:gap-5 md:px-12">
-        <button onClick={() => SynthProvider.getSynthControl().play()}>
-          Play
-        </button>
-        <button onClick={() => SynthProvider.getSynthControl().restart()}>
-          Restart
-        </button>
-        <button onClick={() => SynthProvider.getSynthControl().toggleLoop}>
-          Loop
-        </button>
+        <button onClick={controlPlay}>Play</button>
+        <button onClick={controlRestart}>Restart</button>
+        <button onClick={controlLoop}>Loop</button>
         <input title="bpm" type="number" value={bpm} onChange={handleChange} />
         {/* <button
-          onClick={() => SynthProvider.getSynthControl().seek(4, "seconds")}
+          onClick={() => getSynthControl().seek(4, "seconds")}
         >
           Test
         </button> */}
-        <button
-          onClick={() =>
-            console.log(SynthProvider.getSynthControl().getAudioBuffer)
-          }
-        >
-          Test
-        </button>
       </section>
     </div>
   );
