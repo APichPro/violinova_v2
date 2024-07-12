@@ -1,13 +1,14 @@
 "use client";
 import React, { useEffect, useRef } from "react";
-import { SynthProvider } from "@/providers/SynthProvider";
+import { useSynth } from "@/providers/SynthProvider";
 
 const AbcjsRenderer = ({ abc }: { abc: string }) => {
   const ref = useRef(null);
+  const { getSynth, initSynth, initVisual } = useSynth();
 
   useEffect(() => {
-    SynthProvider.initVisual(abc, ref);
-    SynthProvider.getSynth() ? null : SynthProvider.initSynth();
+    initVisual(abc, ref);
+    getSynth() ? null : initSynth();
   }, [abc]);
 
   return (

@@ -1,3 +1,11 @@
+"use client";
+import React, {
+  createContext,
+  MutableRefObject,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 import {
   MidiBuffer,
   SynthObjectController,
@@ -6,25 +14,54 @@ import {
   renderAbc,
 } from "abcjs";
 
-let synthetizer: MidiBuffer;
-let synthControl: SynthObjectController;
-let visualObject: TuneObject;
-let progress: number;
+interface SynthContextType {
+  initSynth: () => void;
+  controlPlay: () => void;
+  controlLoop: () => void;
+  controlRestart: () => void;
+  controlWarp: (warp: number) => void;
+  getProgress: () => number;
+  getSynth: () => MidiBuffer;
+  initVisual: (abc: string, ref: any) => void;
+  subscribeToProgress: (callback: (progress: number) => void) => void;
+}
 
-const SynthProvider = (() => {
+const SynthContext = createContext<SynthContextType | null>(null);
+
+export const useSynth = () => {
+  const context = useContext(SynthContext);
+  if (!context) {
+    throw new Error("useSynth must be used within a SynthProvider");
+  }
+  return context;
+};
+
+export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const synthetizer = useRef<MidiBuffer | null>(null);
+  const synthControl = useRef<SynthObjectController | null>(null);
+  const visualObject = useRef<TuneObject | null>(null);
+  const [progress, setProgress] = useState<number>(0);
+  const progressListeners = useRef<Function[]>([]);
+
   const initVisual = (abc: string, ref: any) => {
-    visualObject = renderAbc(ref.current, abc, {
+    visualObject.current = renderAbc(ref.current, abc, {
       add_classes: true,
       clickListener: (classes: any) => {
-        console.log(classes);
-        synthControl.seek(classes.abselem.counters.measureTotal, "beats");
+        synthControl.current?.seek(
+          classes.abselem.counters.measureTotal,
+          "beats"
+        );
       },
     })[0];
   };
+
   const initSynth = () => {
-    synthetizer = new synth.CreateSynth();
-    synthControl = new synth.SynthController();
-    synthControl.load(
+    synthetizer.current = new synth.CreateSynth();
+    synthControl.current = new synth.SynthController();
+
+    synthControl.current.load(
       "#audio",
       {
         onEvent: (event: any) => {
@@ -42,6 +79,7 @@ const SynthProvider = (() => {
               (window.innerHeight || document.documentElement.clientHeight) &&
             rect.right <=
               (window.innerWidth || document.documentElement.clientWidth);
+
           if (!isVisible) {
             event.elements![0][0].scrollIntoView({
               block: "center",
@@ -50,9 +88,10 @@ const SynthProvider = (() => {
             });
           }
         },
-        onBeat(beatNumber, totalBeats, totalTime) {
-          progress = beatNumber / totalBeats;
-          // console.log(progress);
+        onBeat: (beatNumber, totalBeats) => {
+          const newProgress = beatNumber / totalBeats;
+          setProgress(newProgress);
+          notifyProgressListeners(newProgress);
         },
       },
       {
@@ -60,12 +99,12 @@ const SynthProvider = (() => {
       }
     );
 
-    synthetizer
+    synthetizer.current
       .init({
-        visualObj: visualObject,
+        visualObj: visualObject.current!,
       })
       .then(() => {
-        synthControl!.setTune(visualObject, true, {
+        synthControl.current!.setTune(visualObject.current!, true, {
           soundFontVolumeMultiplier: 1,
           qpm: 120,
           defaultQpm: 120,
@@ -73,30 +112,53 @@ const SynthProvider = (() => {
       });
   };
 
-  const getVisual = () => {
-    return visualObject;
-  };
-
   const getSynth = () => {
-    return synthetizer;
+    return synthetizer.current!;
   };
 
-  const getSynthControl = () => {
-    return synthControl;
+  const controlPlay = () => {
+    return synthControl.current!.play();
+  };
+
+  const controlLoop = () => {
+    synthControl.current!.toggleLoop();
+  };
+
+  const controlRestart = () => {
+    synthControl.current!.restart();
+  };
+
+  const controlWarp = (warp: number) => {
+    synthControl.current!.setWarp(warp);
   };
 
   const getProgress = () => {
     return progress;
   };
 
-  return {
-    initSynth,
-    getSynth,
-    getSynthControl,
-    initVisual,
-    getVisual,
-    getProgress,
+  const subscribeToProgress = (callback: (progress: number) => void) => {
+    progressListeners.current.push(callback);
   };
-})();
 
-export { SynthProvider };
+  const notifyProgressListeners = (newProgress: number) => {
+    progressListeners.current.forEach((callback) => callback(newProgress));
+  };
+
+  return (
+    <SynthContext.Provider
+      value={{
+        initSynth,
+        getProgress,
+        subscribeToProgress,
+        getSynth,
+        initVisual,
+        controlPlay,
+        controlLoop,
+        controlRestart,
+        controlWarp,
+      }}
+    >
+      {children}
+    </SynthContext.Provider>
+  );
+};
