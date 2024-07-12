@@ -16,3 +16,9 @@ export const getPieceById = query({
     return piece;
   },
 });
+
+export const getAllPieces = query({
+  handler: async (ctx) => {
+    return await ctx.db.query("pieces").collect();
+  },
+});
