@@ -20,10 +20,7 @@ export default function RootLayout({
               <Image src="/icons/logo.svg" alt="logo" width={30} height={30} />
               <MobileNav />
             </div>
-            <div className="flex flex-col md:pb-14">
-              <Toaster />
-              {children}
-            </div>
+            <div className="flex flex-col md:pb-14">{children}</div>
           </div>
         </section>
         <RightSideBar />

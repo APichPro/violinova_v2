@@ -1,32 +1,32 @@
-"use client";
+"use client"
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-import React, { createContext, useState, useEffect, useContext } from "react";
-import { AudioContextType, AudioProps } from "@/types";
-import { usePathname } from "next/navigation";
+// Create a context for the AudioContext
+const AudioContext = createContext<AudioContext | null>(null);
 
-const AudioContext = createContext<AudioContextType | undefined>(undefined);
-
-const AudioProvider = ({ children }: { children: React.ReactNode }) => {
-  const [audio, setAudio] = useState<AudioProps | undefined>();
-  const pathname = usePathname();
+// AudioContext Provider component
+const AudioProvider = ({ children } :  { children: React.ReactNode }) => {
+  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
 
   useEffect(() => {
-    if (pathname === "/profile") setAudio(undefined);
-  }, [pathname]);
+    const context = new window.AudioContext();
+    setAudioContext(context);
+  }, []);
 
   return (
-    <AudioContext.Provider value={{ audio, setAudio }}>
+    <AudioContext.Provider value={audioContext}>
       {children}
     </AudioContext.Provider>
   );
 };
 
-export const useAudio = () => {
+// Custom hook to use the AudioContext
+const useAudioContext = () => {
   const context = useContext(AudioContext);
-  if (!context)
-    throw new Error("useAudio must be used within an AudioProvider");
-
+  // if (!context) {
+  //   throw new Error('useAudioContext must be used within an AudioProvider');
+  // }
   return context;
 };
 
-export default AudioProvider;
+export { AudioProvider, useAudioContext };

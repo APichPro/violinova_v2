@@ -33,7 +33,8 @@ export const createUser = internalMutation({
       name: args.name,
       subscription: args.subscription,
       phone: args.phone,
-      imageUrl: args.imageUrl
+      imageUrl: args.imageUrl,
+      stared: []
     })
   }
 })

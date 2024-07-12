@@ -1,21 +1,31 @@
+"use client"
 import React, { useEffect, useRef } from "react";
 import abcjs from "abcjs";
 
+
 const AbcjsRenderer = ({ abc }: { abc: string }) => {
   const abcContainerRef = useRef(null);
-  const synth = useRef(new abcjs.synth.CreateSynth());
+  // const synth = useRef(new abcjs.synth.CreateSynth());
+  // const synthControl = useRef(new abcjs.synth.SynthController());
 
 
   useEffect(() => {
-
-    const visualObj = abcjs.renderAbc(abcContainerRef.current, abc, {
-      add_classes: true, clickListener: (classes) => {
-        console.log(classes)
-        synth.current.seek(10, "seconds")
+    const visualObj = abcjs.renderAbc(
+      abcContainerRef.current!, 
+      abc, 
+      { 
+        add_classes: true, 
+        clickListener: (abcelem) => {
+          console.log(abcelem)
+          // synth.seek(10)
+          // synthControl.setProgress((abcelem.midiPitches![0].start - 3)/47)
       }
-    })[0];
+    }
+  )[0];
 
-    var synthControl = new abcjs.synth.SynthController();
+    const synthControl = new abcjs.synth.SynthController();
+    const synth = new abcjs.synth.CreateSynth();
+
     synthControl.load("#audio", 
       { 
        onEvent: (event) => {
@@ -24,7 +34,7 @@ const AbcjsRenderer = ({ abc }: { abc: string }) => {
         for (let note of [].slice.call(notes)) {
           note.style.fill = 'black';
         }
-
+        console.log(event)
         event.elements![0][0].style.fill = 'red';
        },
       },
@@ -38,18 +48,25 @@ const AbcjsRenderer = ({ abc }: { abc: string }) => {
       );
 
 
-    synth.current.init({ visualObj, millisecondsPerMeasure: 1000 }).then(() => {
-      synthControl.setTune(visualObj, true).then(() => {
-      synth.current.prime().then((test) => {
+    synth.init({ 
+      visualObj,
+      millisecondsPerMeasure: 1000 
+    }).then(() => {
+      synthControl.setTune(
+        visualObj, true
+      ).then(() => {
+      synth.prime().then((test) => {
+
       });
     })});
 
 
     return () => {
-      synth.current.stop();
+      synth.stop();
     };
   
   }, [abc]);
+
 
   return (
     <div className="bg-white-1 flex flex-col">

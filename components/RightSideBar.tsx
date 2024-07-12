@@ -4,6 +4,7 @@ import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import Analyzer from "./Analyzer";
 
 const RightSideBar = () => {
   const { user } = useUser();
@@ -26,6 +27,7 @@ const RightSideBar = () => {
           </div>
         </Link>
       </SignedIn>
+      <Analyzer />
     </section>
   );
 };
