@@ -15,11 +15,13 @@ import {
 } from "abcjs";
 
 interface SynthContextType {
-  initSynth: () => void;
+  initSynth: (pieceId: string) => void;
   controlPlay: () => void;
+  getPieceId: () => string;
   controlLoop: () => void;
   controlRestart: () => void;
   controlWarp: (warp: number) => void;
+  controlSeek: (beats: number) => void;
   getProgress: () => number;
   getSynth: () => MidiBuffer;
   initVisual: (abc: string, ref: any) => void;
@@ -44,60 +46,52 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
   const visualObject = useRef<TuneObject | null>(null);
   const [progress, setProgress] = useState<number>(0);
   const progressListeners = useRef<Function[]>([]);
+  const [pieceId, setPieceId] = useState<string>();
 
   const initVisual = (abc: string, ref: any) => {
     visualObject.current = renderAbc(ref.current, abc, {
       add_classes: true,
       clickListener: (classes: any) => {
-        synthControl.current?.seek(
-          classes.abselem.counters.measureTotal,
-          "beats"
-        );
+        synthControl.current?.seek(classes.currentTrackWholeNotes[0], "beats");
       },
     })[0];
   };
 
-  const initSynth = () => {
+  const initSynth = (pieceId: string) => {
+    setPieceId(pieceId);
     synthetizer.current = new synth.CreateSynth();
     synthControl.current = new synth.SynthController();
 
-    synthControl.current.load(
-      "#audio",
-      {
-        onEvent: (event: any) => {
-          const notes = document.getElementsByClassName("abcjs-note");
-          Array.from(notes).forEach(
-            (note) => ((note as HTMLElement).style.fill = "black")
-          );
-          event.elements![0][0].style.fill = "red";
+    synthControl.current.load("#audio", {
+      onEvent: (event: any) => {
+        const notes = document.getElementsByClassName("abcjs-note");
+        Array.from(notes).forEach(
+          (note) => ((note as HTMLElement).style.fill = "black")
+        );
+        event.elements![0][0].style.fill = "red";
 
-          const rect = event.elements![0][0].getBoundingClientRect();
-          const isVisible =
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <=
-              (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <=
-              (window.innerWidth || document.documentElement.clientWidth);
+        const rect = event.elements![0][0].getBoundingClientRect();
+        const isVisible =
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <=
+            (window.innerHeight || document.documentElement.clientHeight) &&
+          rect.right <=
+            (window.innerWidth || document.documentElement.clientWidth);
 
-          if (!isVisible) {
-            event.elements![0][0].scrollIntoView({
-              block: "center",
-              inline: "center",
-              behavior: "smooth",
-            });
-          }
-        },
-        onBeat: (beatNumber, totalBeats) => {
-          const newProgress = beatNumber / totalBeats;
-          setProgress(newProgress);
-          notifyProgressListeners(newProgress);
-        },
+        if (!isVisible) {
+          event.elements![0][0].scrollIntoView({
+            block: "center",
+            inline: "center",
+            behavior: "smooth",
+          });
+        }
       },
-      {
-        displayProgress: true,
-      }
-    );
+      onBeat: (beatNumber, totalBeats) => {
+        setProgress((beatNumber / totalBeats) * 100);
+        notifyProgressListeners((beatNumber / totalBeats) * 100);
+      },
+    });
 
     synthetizer.current
       .init({
@@ -110,6 +104,10 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
           defaultQpm: 120,
         });
       });
+  };
+
+  const getPieceId = () => {
+    return pieceId!;
   };
 
   const getSynth = () => {
@@ -130,6 +128,10 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const controlWarp = (warp: number) => {
     synthControl.current!.setWarp(warp);
+  };
+
+  const controlSeek = (seek: number) => {
+    synthControl.current!.seek(seek, "beats");
   };
 
   const getProgress = () => {
@@ -156,6 +158,8 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
         controlLoop,
         controlRestart,
         controlWarp,
+        getPieceId,
+        controlSeek,
       }}
     >
       {children}
