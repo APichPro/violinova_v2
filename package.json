@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.2.2",
+    "@magenta/music": "^1.23.1",
     "abcjs": "6.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -21,10 +22,12 @@
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-dropzone": "^14.2.3",
     "stripe": "^16.2.0",
     "svix": "^1.24.0",
     "tailwind-merge": "^2.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "xml2abc": "^1.68.3"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.6",

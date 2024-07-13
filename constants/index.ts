@@ -25,6 +25,11 @@ export const sidebarLinks = [
     label: "Note",
   },
   {
+    route: "/create",
+    label: "Create",
+    imgURL: "/icons/profile.svg",
+  },
+  {
     route: "/profile",
     label: "Profile",
     imgURL: "/icons/profile.svg",
@@ -33,33 +38,6 @@ export const sidebarLinks = [
     route: "/plans",
     label: "Plan",
     imgURL: "/icons/profile.svg",
-  },
-];
-
-export const voiceDetails = [
-  {
-    id: 1,
-    name: "alloy",
-  },
-  {
-    id: 2,
-    name: "echo",
-  },
-  {
-    id: 3,
-    name: "fable",
-  },
-  {
-    id: 4,
-    name: "onyx",
-  },
-  {
-    id: 5,
-    name: "nova",
-  },
-  {
-    id: 6,
-    name: "shimmer",
   },
 ];
 
