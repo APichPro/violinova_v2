@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useSynth } from "@/providers/SynthProvider";
 
 const ProgressComponent = () => {
-  const { subscribeToProgress, controlSeek } = useSynth();
+  const { subscribeToProgress, controlSeek, getTotalTime } = useSynth();
   const [progress, setProgress] = useState<number>(0);
   const [isDragging, setIsDragging] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
@@ -33,6 +33,19 @@ const ProgressComponent = () => {
         Math.max(0, ((e.clientX - rect.left) / rect.width) * 100)
       );
       controlSeek(newProgress);
+      setProgress(newProgress);
+    }
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (progressBarRef.current) {
+      const rect = progressBarRef.current.getBoundingClientRect();
+      const newProgress = Math.min(
+        100,
+        Math.max(0, ((e.clientX - rect.left) / rect.width) * 100)
+      );
+      controlSeek(newProgress);
+      setProgress(newProgress);
     }
   };
 
@@ -54,13 +67,21 @@ const ProgressComponent = () => {
   return (
     <div
       ref={progressBarRef}
-      className="w-full bg-gray-300 rounded-full h-6 overflow-hidden mt-5 relative"
+      className="bg-gray-300 rounded-full h-6 overflow-hidden text-center mx-8 relative justify-center items-center "
+      onClick={handleClick}
     >
+      <h1 className="absolute w-full text-center">{`${progress} / ${Math.floor(
+        getTotalTime() / 60
+      )
+        .toString()
+        .padStart(
+          2,
+          "0"
+        )}:${(getTotalTime() % 60).toFixed(0).padStart(2, "0")}`}</h1>
       <div
-        className={`h-full flex items-center justify-center text-white font-bold`}
+        className={`h-full flex items-center text-white font-bold`}
         style={{ width: `${progress}%` }}
       >
-        {`${progress}%`}
         <div
           className="absolute w-10 h-10 rounded-full bg-blue-500 text-center flex items-center justify-center cursor-pointer"
           style={{ left: `calc(${progress}% - 1.25rem)` }}

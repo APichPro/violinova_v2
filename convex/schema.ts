@@ -24,9 +24,14 @@ export default defineSchema ({
     name: v.string(),
     phone: v.optional(v.string()),
     imageUrl: v.optional(v.string()),
-    subscription: v.optional(v.string()),
+    subscriptionId: v.optional(v.string()),
+    customerId: v.optional(v.string()),
+    endsOn: v.optional(v.number()),
+    plan: v.optional(v.string()),
     stared: v.optional(v.array(v.id("pieces")))
-  }),
+  })
+  .index("by_clerkId", ["clerkId"])
+  .index("by_subscriptionId", ["subscriptionId"]),
   courses: defineTable({
     title: v.string(),
     content: v.string(),
@@ -43,5 +48,10 @@ export default defineSchema ({
     views: v.number(),
     related: v.array(v.id("pieces")),
     stared: v.number(),
-  })
+  }),
+  payments: defineTable({
+    stripeId: v.optional(v.string()),
+    customerId: v.optional(v.string()),
+    userId: v.optional(v.string()),
+  }).index("stripeId", ["stripeId"]),
 })

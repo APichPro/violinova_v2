@@ -23,6 +23,7 @@ interface SynthContextType {
   controlWarp: (warp: number) => void;
   controlSeek: (beats: number) => void;
   getProgress: () => number;
+  getTotalTime: () => number;
   getSynth: () => MidiBuffer;
   initVisual: (abc: string, ref: any) => void;
   subscribeToProgress: (callback: (progress: number) => void) => void;
@@ -138,6 +139,10 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
     return progress;
   };
 
+  const getTotalTime = () => {
+    return visualObject.current?.getTotalTime();
+  };
+
   const subscribeToProgress = (callback: (progress: number) => void) => {
     progressListeners.current.push(callback);
   };
@@ -160,6 +165,7 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
         controlWarp,
         getPieceId,
         controlSeek,
+        getTotalTime,
       }}
     >
       {children}

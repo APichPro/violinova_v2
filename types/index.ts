@@ -13,3 +13,8 @@ export interface ProfileCardProps {
   imageUrl: string;
   userFirstName: string;
 }
+
+export interface IsFetchingContextType {
+  isFetching: boolean;
+  setIsFetching: React.Dispatch<React.SetStateAction<boolean>>;
+}

@@ -4,6 +4,7 @@ import "./globals.css";
 import ConvexClerkProvider from "@/providers/ConvexClerkProvider";
 import { AudioProvider } from "@/providers/AudioProvider";
 import { SynthProvider } from "@/providers/SynthProvider";
+import IsFetchingProvider from "@/providers/IsFetchingProvider";
 
 const manrope = Manrope({ subsets: ["latin"] });
 
@@ -21,9 +22,11 @@ export default function RootLayout({
   return (
     <ConvexClerkProvider>
       <html lang="en">
-        <SynthProvider>
-          <body className={manrope.className}>{children}</body>
-        </SynthProvider>
+        <IsFetchingProvider>
+          <SynthProvider>
+            <body className={manrope.className}>{children}</body>
+          </SynthProvider>
+        </IsFetchingProvider>
       </html>
     </ConvexClerkProvider>
   );
