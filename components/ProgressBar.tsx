@@ -32,7 +32,7 @@ const ProgressComponent = () => {
         100,
         Math.max(0, ((e.clientX - rect.left) / rect.width) * 100)
       );
-      controlSeek(newProgress);
+      controlSeek((newProgress * getTotalTime()) / 100);
       setProgress(newProgress);
     }
   };
@@ -44,7 +44,7 @@ const ProgressComponent = () => {
         100,
         Math.max(0, ((e.clientX - rect.left) / rect.width) * 100)
       );
-      controlSeek(newProgress);
+      controlSeek((newProgress * getTotalTime()) / 100);
       setProgress(newProgress);
     }
   };
@@ -67,7 +67,7 @@ const ProgressComponent = () => {
   return (
     <div
       ref={progressBarRef}
-      className="bg-palette-5 h-2 overflow-hidden text-center relative justify-center items-center w-full"
+      className="bg-palette-5 h-2 text-center relative justify-center items-center w-full"
       onClick={handleClick}
     >
       {/* <h1 className="absolute w-full text-center">{`${progress} / ${Math.floor(
@@ -79,15 +79,14 @@ const ProgressComponent = () => {
           "0"
         )}:${(getTotalTime() % 60).toFixed(0).padStart(2, "0")}`}</h1> */}
       <div
-        className={`h-full bg-orange-1 flex items-center text-white font-bold rounded-r-full`}
+        className={`h-full bg-orange-2 flex items-center text-white font-bold rounded-r-full`}
         style={{ width: `${progress}%` }}
       >
-        {/* {/* <div
-          className="absolute w-10 h-10 rounded-full bg-blue-500 text-center flex items-center justify-center cursor-pointer"
+        <div
+          className="absolute z-10 h-full w-8 rounded-full bg-orange-1 text-center flex items-center justify-center cursor-pointer hover:h-8"
           style={{ left: `calc(${progress}% - 1.25rem)` }}
           onMouseDown={handleMouseDown}
-        >
-        </div> */}
+        />
       </div>
     </div>
   );

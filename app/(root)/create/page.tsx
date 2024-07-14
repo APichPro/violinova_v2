@@ -33,7 +33,7 @@ const Create = () => {
   }, [files]);
 
   return (
-    <div className="flex justify-center  size-full items-center">
+    <div className="flex justify-center items-center">
       {!files ? (
         <div
           {...getRootProps()}

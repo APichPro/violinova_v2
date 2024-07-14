@@ -1,10 +1,8 @@
-"use client";
-import React, { useEffect, useRef } from "react";
-import { useSynth } from "@/providers/SynthProvider";
+import React from "react";
 
 const AbcjsRenderer = () => {
   return (
-    <div className="bg-white-1 flex flex-col">
+    <div className="bg-white-1 flex flex-col w-full">
       <div id="visual"></div>
     </div>
   );

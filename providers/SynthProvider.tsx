@@ -52,8 +52,12 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
   const initVisual = (abc: string, ref: any) => {
     visualObject.current = renderAbc(ref.current, abc, {
       add_classes: true,
-      clickListener: (classes: any) => {
-        synthControl.current?.seek(classes.currentTrackWholeNotes[0], "beats");
+      responsive: "resize",
+      clickListener: (e: any) => {
+        synthControl.current?.seek(
+          e.currentTrackMilliseconds[0] / 1000,
+          "seconds"
+        );
       },
     })[0];
   };
@@ -65,11 +69,11 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     synthControl.current.load("#audio", {
       onEvent: (event: any) => {
-        const notes = document.getElementsByClassName("abcjs-note");
-        Array.from(notes).forEach(
+        const all = document.querySelectorAll(".abcjs-note,.abcjs-rest");
+        Array.from(all).forEach(
           (note) => ((note as HTMLElement).style.fill = "black")
         );
-        event.elements![0][0].style.fill = "red";
+        event.elements![0][0].style.fill = "#F97535";
 
         const rect = event.elements![0][0].getBoundingClientRect();
         const isVisible =
@@ -101,8 +105,8 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
       .then(() => {
         synthControl.current!.setTune(visualObject.current!, true, {
           soundFontVolumeMultiplier: 1,
-          qpm: 120,
-          defaultQpm: 120,
+          // qpm: 120,
+          // defaultQpm: 120,
         });
       });
   };
@@ -132,7 +136,7 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const controlSeek = (seek: number) => {
-    synthControl.current!.seek(seek, "beats");
+    synthControl.current!.seek(seek, "seconds");
   };
 
   const getProgress = () => {
