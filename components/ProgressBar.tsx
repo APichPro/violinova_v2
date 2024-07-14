@@ -67,28 +67,27 @@ const ProgressComponent = () => {
   return (
     <div
       ref={progressBarRef}
-      className="bg-gray-300 rounded-full h-6 overflow-hidden text-center mx-8 relative justify-center items-center "
+      className="bg-palette-5 h-2 overflow-hidden text-center relative justify-center items-center w-full"
       onClick={handleClick}
     >
-      <h1 className="absolute w-full text-center">{`${progress} / ${Math.floor(
+      {/* <h1 className="absolute w-full text-center">{`${progress} / ${Math.floor(
         getTotalTime() / 60
       )
         .toString()
         .padStart(
           2,
           "0"
-        )}:${(getTotalTime() % 60).toFixed(0).padStart(2, "0")}`}</h1>
+        )}:${(getTotalTime() % 60).toFixed(0).padStart(2, "0")}`}</h1> */}
       <div
-        className={`h-full flex items-center text-white font-bold`}
+        className={`h-full bg-orange-1 flex items-center text-white font-bold rounded-r-full`}
         style={{ width: `${progress}%` }}
       >
-        <div
+        {/* {/* <div
           className="absolute w-10 h-10 rounded-full bg-blue-500 text-center flex items-center justify-center cursor-pointer"
           style={{ left: `calc(${progress}% - 1.25rem)` }}
           onMouseDown={handleMouseDown}
         >
-          🚀
-        </div>
+        </div> */}
       </div>
     </div>
   );

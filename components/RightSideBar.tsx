@@ -5,12 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import Analyzer from "./Analyzer";
+import Metronome from "./Metronome";
 
 const RightSideBar = () => {
   const { user } = useUser();
 
   return (
-    <section className="right_sidebar text-white-1">
+    <section className="sticky right-0 top-0 flex w-[310px] flex-col border-none bg-palette-4 px-[30px] pt-8">
       <SignedIn>
         <Link href={`/profile/${user?.id}`} className="flex gap-3 pb-12">
           <UserButton />
@@ -28,6 +29,7 @@ const RightSideBar = () => {
         </Link>
       </SignedIn>
       <Analyzer />
+      <Metronome />
     </section>
   );
 };

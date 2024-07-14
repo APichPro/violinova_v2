@@ -4,6 +4,7 @@ import tone2abc from "@/lib/midi2abc";
 import { useDropzone } from "react-dropzone";
 import { blobToNoteSequence } from "@magenta/music";
 import { useSynth } from "@/providers/SynthProvider";
+import { HiOutlineUpload } from "react-icons/hi";
 
 const Create = () => {
   const [files, setFiles] = useState<Blob>();
@@ -32,11 +33,15 @@ const Create = () => {
   }, [files]);
 
   return (
-    <div className="relative w-full">
+    <div className="flex justify-center  size-full items-center">
       {!files ? (
-        <div {...getRootProps()} className="bg-red-500 w-full h-full">
+        <div
+          {...getRootProps()}
+          className="border-[36px] border-palette-4 rounded-3xl aspect-square h-60 flex items-center justify-center flex-col text-2xl"
+        >
           <input {...getInputProps()} />
-          {isDragActive ? <p>Drop the files here ...</p> : <p>Drag and drop</p>}
+          {isDragActive ? <p>Drop the files here</p> : <p>Drag and drop</p>}
+          <HiOutlineUpload fill="#E5E0DA" size={80} />
         </div>
       ) : (
         <div ref={ref}></div>

@@ -12,7 +12,7 @@ const Dashboard = () => {
   if (!allPieces) return <LoaderSpinner />;
 
   return (
-    <div className="mt-9 flex-col gap-9 ">
+    <div className="mt-9 flex-col gap-9">
       <section className="flex flex-col gap-5">
         <h1 className="text-20 font-bold text-white-1">Trending</h1>
         <div className="podcast_grid">

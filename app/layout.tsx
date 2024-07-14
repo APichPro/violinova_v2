@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 import ConvexClerkProvider from "@/providers/ConvexClerkProvider";
-import { AudioProvider } from "@/providers/AudioProvider";
 import { SynthProvider } from "@/providers/SynthProvider";
 import IsFetchingProvider from "@/providers/IsFetchingProvider";
 
