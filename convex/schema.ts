@@ -16,6 +16,7 @@ export default defineSchema ({
     difficulty: v.number(),
     views: v.number(),
     stared: v.number(),
+    private: v.boolean()
   })
   .searchIndex("search_title", {searchField: "title"})
   .searchIndex("search_difficulty", {searchField: "difficulty"}),

@@ -24,8 +24,8 @@ const PieceCard = ({
         /> */}
       </figure>
       <div className="flex flex-col">
-        <h1 className="text-16 truncate font-bold text-white-1">{title}</h1>
-        <h2 className="text-12 truncate font-normal text-white-4">{id}</h2>
+        <h1 className="text-16 truncate font-bold ">{title}</h1>
+        <h2 className="text-12 truncate font-normal ">{id}</h2>
       </div>
     </Link>
   );

@@ -54,10 +54,11 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
       add_classes: true,
       responsive: "resize",
       clickListener: (e: any) => {
-        synthControl.current?.seek(
-          e.currentTrackMilliseconds[0] / 1000,
-          "seconds"
-        );
+        console.log(e);
+        const trackTime = e.currentTrackMilliseconds[0]
+          ? e.currentTrackMilliseconds[0]
+          : e.currentTrackMilliseconds;
+        (synthControl.current as any)?.seek(trackTime / 1000, "seconds");
       },
     })[0];
   };
@@ -136,7 +137,7 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const controlSeek = (seek: number) => {
-    synthControl.current!.seek(seek, "seconds");
+    (synthControl.current as any)!.seek(seek, "seconds");
   };
 
   const getProgress = () => {
@@ -144,7 +145,7 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const getTotalTime = () => {
-    return visualObject.current?.getTotalTime();
+    return visualObject.current!.getTotalTime();
   };
 
   const subscribeToProgress = (callback: (progress: number) => void) => {

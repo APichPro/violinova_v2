@@ -333,26 +333,23 @@ html {
 
 @keyframes swing {
   0% {
-    transform: rotate(15deg);
+    transform: rotate(45deg);
   }
   25% {
     transform: rotate(0deg);
   }
   50% {
-    transform: rotate(-15deg);
+    transform: rotate(-45deg);
   }
   75% {
     transform: rotate(0deg);
   }
   100% {
-    transform: rotate(15deg);
+    transform: rotate(45deg);
   }
 }
 
 .metronome-bar {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
   transform-origin: bottom center; /* Set the pivot point */
 }
 

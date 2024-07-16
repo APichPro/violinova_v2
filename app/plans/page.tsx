@@ -10,13 +10,6 @@ import { useClerk } from "@clerk/nextjs";
 import LeftSidebar from "@/components/LeftSidebar";
 import RightSidebar from "@/components/RightSideBar";
 import MobileNav from "@/components/MobileNav";
-import {
-  Activity,
-  Battery,
-  BatteryFull,
-  BatteryLow,
-  BatteryMedium,
-} from "lucide-react";
 import Player from "@/components/Player";
 import LoaderSpinner from "@/components/LoaderSpinner";
 import { pricingPlans } from "@/constants";

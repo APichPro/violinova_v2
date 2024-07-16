@@ -23,21 +23,30 @@ const Metronome = () => {
     setIsRunning(!isRunning);
   };
 
-  const handleBpmChange = (e) => {
+  const handleBpmChange = (e: { target: { value: any } }) => {
     setBpm(Number(e.target.value));
   };
 
-  const swingDuration = `${60 / bpm}s`;
+  const swingDuration = `${(60 * 2) / bpm}s`;
 
   return (
     <div className="flex flex-col items-center mt-10">
-      <h1 className="text-2xl font-bold mb-4">Metronome</h1>
       <div
-        className={`metronome-bar ${isRunning ? "swing" : ""}`}
+        className={`metronome-bar flex absolute justify-center align-bottom ${isRunning ? "swing" : ""}`}
         style={{ animationDuration: swingDuration }}
       >
-        <div className="w-2 h-24 bg-blue-500" />
+        <div className="w-4 h-4 bg-black-1 rounded-full absolute top-[-8px] left-1/2 transform -translate-x-1/2" />
+
+        <div className="w-1 h-24 bg-black-1 rounded-full" />
       </div>
+      <svg className="h-32" version="1.1" id="Icons" viewBox="0 0 32 32">
+        <path
+          fill="none"
+          stroke="black"
+          d="M22.7,16 l2.5,9.7 c0.4,1.7-0.8,3.3-2.6,3.3 H9.3 c-1.7,0-3-1.6-2.6-3.2 l4.7-20.5 C11.8,3.9,13,3,14.3,3 h3.4 c1.4,0,2.5,0.1,3.8,7 l1.45,7"
+        />
+      </svg>
+
       <input
         title="bpm"
         type="number"

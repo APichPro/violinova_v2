@@ -11,12 +11,16 @@
   "dependencies": {
     "@clerk/nextjs": "^5.2.2",
     "@magenta/music": "^1.23.1",
+    "@tabler/icons-react": "^3.11.0",
     "abcjs": "6.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "convex": "^1.13.0",
+    "fast-xml-parser": "^4.4.0",
     "framer-motion": "^11.3.2",
     "getusermedia": "^2.0.1",
+    "jquery": "^3.7.1",
+    "jszip": "^3.10.1",
     "lodash": "^4.17.21",
     "next": "14.2.4",
     "react": "^18",
@@ -27,10 +31,10 @@
     "svix": "^1.24.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "tone": "^15.0.4",
-    "xml2abc": "^1.68.3"
+    "tone": "14.7.58"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.30",
     "@types/lodash": "^4.17.6",
     "@types/node": "^20",
     "@types/react": "^18",
