@@ -1,14 +1,12 @@
 "use client";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 import { useSynth } from "@/providers/SynthProvider";
-import ProgressBar from "./ProgressBar";
 import Image from "next/image";
+import Draggable from "react-draggable";
 
 const Player = () => {
   const [bpm, setBpm] = useState(100);
-  const { controlWarp, controlPlay, controlRestart, controlLoop, getPieceId } =
-    useSynth();
+  const { controlWarp, controlPlay, controlRestart, controlLoop } = useSynth();
 
   const handleChange = (event: { target: { value: any } }) => {
     setBpm(event.target.value);
@@ -16,17 +14,12 @@ const Player = () => {
   };
 
   return (
-    <div className={cn("sticky bottom-0 left-0 flex flex-col", {})}>
-      <div id="audio" className="hidden" />
-      <ProgressBar />
-      <section className="glassmorphism-player flex w-full items-center justify-between px-4 max-md:justify-center max-md:gap-5 md:px-12">
-        {/* <Link href={`/piece/${getPieceId()}`} className="bg-red-50">
-          Test
-        </Link> */}
-        <div className="flex gap-4 w-full justify-center">
+    <Draggable defaultPosition={{ x: 0, y: 0 }}>
+      <div className="z-10 glassmorphism-player flex flex-col items-center justify-between px-4 max-md:justify-center max-md:gap-5 md:px-12 top-0 rounded-full absolute">
+        <div className="flex gap-4 justify-center">
           <Image
-            src="/icons/reverse.svg"
-            alt="play"
+            src="/icons/player-skip-back.svg"
+            alt="back"
             width={40}
             height={40}
             onClick={controlRestart}
@@ -40,23 +33,16 @@ const Player = () => {
             onClick={controlPlay}
             className="cursor-pointer"
           />
-          <Image
-            src="/icons/forward.svg"
-            alt="play"
-            width={40}
-            height={40}
-            onClick={controlLoop}
-            className="cursor-pointer"
+          <input
+            title="bpm"
+            type="number"
+            value={bpm}
+            onChange={handleChange}
           />
         </div>
-        {/* <input title="bpm" type="number" value={bpm} onChange={handleChange} /> */}
-        {/* <button
-          onClick={() => getSynthControl().seek(4, "seconds")}
-        >
-          Test
-        </button> */}
-      </section>
-    </div>
+        <div id="audio" className="hidden" />
+      </div>
+    </Draggable>
   );
 };
 

@@ -1,7 +1,8 @@
+"use client";
 import React, { useEffect, useState, useRef } from "react";
 import { useSynth } from "@/providers/SynthProvider";
 
-const ProgressComponent = () => {
+const ProgressBar = () => {
   const { subscribeToProgress, controlSeek, getTotalTime } = useSynth();
   const [progress, setProgress] = useState<number>(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -67,7 +68,7 @@ const ProgressComponent = () => {
   return (
     <div
       ref={progressBarRef}
-      className="bg-palette-5 h-2 text-center relative justify-center items-center w-full"
+      className=" bg-palette-5 h-4 text-center relative justify-center items-center w-full"
       onClick={handleClick}
     >
       {/* <h1 className="absolute w-full text-center">{`${progress} / ${Math.floor(
@@ -92,4 +93,4 @@ const ProgressComponent = () => {
   );
 };
 
-export default ProgressComponent;
+export default ProgressBar;

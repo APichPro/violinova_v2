@@ -16,7 +16,7 @@ const RightSideBar = () => {
         <Link href={`/profile/${user?.id}`} className="flex gap-3 pb-12">
           <UserButton />
           <div className="flex w-full items-center justify-between">
-            <h1 className="text-16 truncate font-semibold text-white-1">
+            <h1 className="text-16 truncate font-semibold ">
               {user?.firstName}{" "}
             </h1>
             <Image

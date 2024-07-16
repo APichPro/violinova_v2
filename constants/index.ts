@@ -1,10 +1,5 @@
 export const sidebarLinks = [
   {
-    icon: "/icons/home.svg",
-    route: "/",
-    label: "Dashboard",
-  },
-  {
     icon: "/icons/music-search.svg",
     route: "/discover",
     label: "Discover",
@@ -25,7 +20,7 @@ export const sidebarLinks = [
     label: "Note",
   },
   {
-    route: "create",
+    route: "/create",
     label: "Create",
     icon: "/icons/music-plus.svg",
   },

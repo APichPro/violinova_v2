@@ -1,11 +1,5 @@
 "use client";
-import React, {
-  createContext,
-  MutableRefObject,
-  useContext,
-  useRef,
-  useState,
-} from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 import {
   MidiBuffer,
   SynthObjectController,
@@ -15,7 +9,7 @@ import {
 } from "abcjs";
 
 interface SynthContextType {
-  initSynth: (pieceId: string) => void;
+  initSynth: (abc: string, ref: any, pieceId: string) => void;
   controlPlay: () => void;
   getPieceId: () => string;
   controlLoop: () => void;
@@ -24,8 +18,6 @@ interface SynthContextType {
   controlSeek: (beats: number) => void;
   getProgress: () => number;
   getTotalTime: () => number;
-  getSynth: () => MidiBuffer;
-  initVisual: (abc: string, ref: any) => void;
   subscribeToProgress: (callback: (progress: number) => void) => void;
 }
 
@@ -49,7 +41,11 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
   const progressListeners = useRef<Function[]>([]);
   const [pieceId, setPieceId] = useState<string>();
 
-  const initVisual = (abc: string, ref: any) => {
+  const initSynth = (abc: string, ref: any, pieceId: string) => {
+    setPieceId(pieceId);
+    synthetizer.current = new synth.CreateSynth();
+    synthControl.current = new synth.SynthController();
+
     visualObject.current = renderAbc(ref.current, abc, {
       add_classes: true,
       responsive: "resize",
@@ -61,12 +57,6 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
         (synthControl.current as any)?.seek(trackTime / 1000, "seconds");
       },
     })[0];
-  };
-
-  const initSynth = (pieceId: string) => {
-    setPieceId(pieceId);
-    synthetizer.current = new synth.CreateSynth();
-    synthControl.current = new synth.SynthController();
 
     synthControl.current.load("#audio", {
       onEvent: (event: any) => {
@@ -162,8 +152,6 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
         initSynth,
         getProgress,
         subscribeToProgress,
-        getSynth,
-        initVisual,
         controlPlay,
         controlLoop,
         controlRestart,

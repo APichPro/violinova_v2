@@ -10,11 +10,12 @@ import { useMutation } from "convex/react";
 import JSZip from "jszip";
 import $ from "jquery";
 import { importMusicXML } from "@/lib/utils";
+import Player from "@/components/Player";
 
 const Create = () => {
   const [file, setFile] = useState<File>();
   const ref = useRef(null);
-  const { getSynth, initSynth, initVisual } = useSynth();
+  const { initSynth } = useSynth();
   const [abc, setAbc] = useState<string>();
 
   const onDrop = useCallback((acceptedFiles: any) => {
@@ -32,8 +33,7 @@ const Create = () => {
           console.log(file);
           const noteSequence = await blobToNoteSequence(new Blob([file]));
           const abcString = midi2abc(noteSequence);
-          initVisual(abcString, ref);
-          getSynth() ? null : initSynth("test");
+          initSynth(abcString, ref, "test");
           setAbc(abcString);
           break;
         }
@@ -53,8 +53,7 @@ const Create = () => {
                 var result = importMusicXML(text);
                 // console.log(xmldata);
                 console.log(result);
-                initVisual(result, ref);
-                getSynth() ? null : initSynth("test");
+                initSynth(result, ref, "test");
                 setAbc(result);
               });
             });
@@ -83,7 +82,7 @@ const Create = () => {
   }
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex flex-col justify-center items-center">
       <button onClick={() => onSubmit()}>Publish</button>
       {!file ? (
         <div

@@ -1,6 +1,6 @@
 "use client";
-import AbcjsRenderer from "@/components/AbcjsRenderer";
 import LoaderSpinner from "@/components/LoaderSpinner";
+import Player from "@/components/Player";
 import { api } from "@/convex/_generated/api";
 import { useSynth } from "@/providers/SynthProvider";
 import { useQuery } from "convex/react";
@@ -17,12 +17,11 @@ const PieceDetails = ({
     _id: params.pieceId,
   });
   const ref = useRef(null);
-  const { getSynth, initSynth, initVisual } = useSynth();
+  const { initSynth } = useSynth();
 
   useEffect(() => {
     if (piece) {
-      initVisual(piece.abc, ref);
-      getSynth() ? null : initSynth(piece._id);
+      initSynth(piece.abc, ref, piece._id);
     }
   }, [piece]);
 
@@ -30,8 +29,7 @@ const PieceDetails = ({
 
   return (
     <div>
-      <p className="text-white-1">Course Details for {piece.title}</p>
-      <div ref={ref}></div>
+      <div ref={ref} className="overflow-y-scroll"></div>
     </div>
   );
 };
