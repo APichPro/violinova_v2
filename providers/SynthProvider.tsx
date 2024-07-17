@@ -58,36 +58,46 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
       },
     })[0];
 
-    synthControl.current.load("#audio", {
-      onEvent: (event: any) => {
-        const all = document.querySelectorAll(".abcjs-note,.abcjs-rest");
-        Array.from(all).forEach(
-          (note) => ((note as HTMLElement).style.fill = "black")
-        );
-        event.elements![0][0].style.fill = "#F97535";
+    synthControl.current.load(
+      "#audio",
+      {
+        onEvent: (event: any) => {
+          const all = document.querySelectorAll(".abcjs-note,.abcjs-rest");
+          Array.from(all).forEach(
+            (note) => ((note as HTMLElement).style.fill = "black")
+          );
+          event.elements![0][0].style.fill = "#F97535";
 
-        const rect = event.elements![0][0].getBoundingClientRect();
-        const isVisible =
-          rect.top >= 0 &&
-          rect.left >= 0 &&
-          rect.bottom <=
-            (window.innerHeight || document.documentElement.clientHeight) &&
-          rect.right <=
-            (window.innerWidth || document.documentElement.clientWidth);
+          const rect = event.elements![0][0].getBoundingClientRect();
+          const isVisible =
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <=
+              (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <=
+              (window.innerWidth || document.documentElement.clientWidth);
 
-        if (!isVisible) {
-          event.elements![0][0].scrollIntoView({
-            block: "center",
-            inline: "center",
-            behavior: "smooth",
-          });
-        }
+          if (!isVisible) {
+            event.elements![0][0].scrollIntoView({
+              block: "center",
+              inline: "center",
+              behavior: "smooth",
+            });
+          }
+        },
+        onBeat: (beatNumber, totalBeats) => {
+          setProgress((beatNumber / totalBeats) * 100);
+          notifyProgressListeners((beatNumber / totalBeats) * 100);
+        },
       },
-      onBeat: (beatNumber, totalBeats) => {
-        setProgress((beatNumber / totalBeats) * 100);
-        notifyProgressListeners((beatNumber / totalBeats) * 100);
-      },
-    });
+      {
+        displayLoop: true,
+        displayRestart: true,
+        displayPlay: true,
+        displayProgress: true,
+        displayWarp: true,
+      }
+    );
 
     synthetizer.current
       .init({
@@ -95,7 +105,10 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
       })
       .then(() => {
         synthControl.current!.setTune(visualObject.current!, true, {
-          soundFontVolumeMultiplier: 1,
+          soundFontVolumeMultiplier: 10,
+          // drum: "dddd 76 77 77 77 60 30 30 30",
+          // drumBars: 2,
+          // drumIntro: 0,
           // qpm: 120,
           // defaultQpm: 120,
         });
@@ -104,10 +117,6 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const getPieceId = () => {
     return pieceId!;
-  };
-
-  const getSynth = () => {
-    return synthetizer.current!;
   };
 
   const controlPlay = () => {
@@ -123,6 +132,7 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const controlWarp = (warp: number) => {
+    console.log(warp);
     synthControl.current!.setWarp(warp);
   };
 

@@ -20,7 +20,7 @@ const RightSideBar = () => {
               {user?.firstName}{" "}
             </h1>
             <Image
-              src="/icons/right-arrow.svg"
+              src="/icons/chevron-right.svg"
               alt="arrow"
               width={24}
               height={24}

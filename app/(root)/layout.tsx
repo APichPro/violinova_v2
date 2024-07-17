@@ -1,9 +1,7 @@
 import LeftSidebar from "@/components/LeftSidebar";
-import MobileNav from "@/components/MobileNav";
 import Player from "@/components/Player";
 import ProgressBar from "@/components/ProgressBar";
 import RightSideBar from "@/components/RightSideBar";
-import Image from "next/image";
 
 export default function RootLayout({
   children,
@@ -16,7 +14,7 @@ export default function RootLayout({
         <LeftSidebar />
         <section className="flex flex-col w-full">
           <Player />
-          <div className="overflow-y-scroll">{children}</div>
+          <div className="overflow-y-scroll size-full">{children}</div>
           {/* <div className="mx-auto flex w-full max-w-5xl flex-col max-sm:px-4">
             {/* <div className=" flex h-16 items-center justify-between md:hidden">
               <Image src="/icons/logo.svg" alt="logo" width={30} height={30} />

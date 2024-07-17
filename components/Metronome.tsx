@@ -4,9 +4,10 @@ import React, { useState, useEffect } from "react";
 const Metronome = () => {
   const [bpm, setBpm] = useState(120);
   const [isRunning, setIsRunning] = useState(false);
-  const tickSound = new Audio("/tick.mp3"); // Ensure the sound file is in the public folder
 
   useEffect(() => {
+    const tickSound = new Audio("/tick.mp3");
+
     if (isRunning) {
       const intervalTime = (60 / bpm) * 1000;
 
