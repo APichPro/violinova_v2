@@ -7,14 +7,7 @@ export default function Layout({
 }>) {
   return (
     <main className="relative h-screen w-full">
-      <div className=" absolute size-full">
-        <Image
-          src="/images/bg.png"
-          alt="background"
-          fill
-          className="size-full"
-        />
-      </div>
+      <div className=" absolute size-full"></div>
       {children}
     </main>
   );

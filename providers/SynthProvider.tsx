@@ -1,12 +1,17 @@
 "use client";
-import React, { createContext, useContext, useRef, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   MidiBuffer,
   SynthObjectController,
   TuneObject,
   synth,
   renderAbc,
-  Editor,
 } from "abcjs";
 
 interface SynthContextType {
@@ -38,7 +43,6 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
   const synthetizer = useRef<MidiBuffer | null>(null);
   const synthControl = useRef<SynthObjectController | null>(null);
   const visualObject = useRef<TuneObject | null>(null);
-  const editor = useRef<Editor | null>(null);
 
   const [progress, setProgress] = useState<number>(0);
   const progressListeners = useRef<Function[]>([]);
@@ -61,46 +65,36 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
       },
     })[0];
 
-    synthControl.current.load(
-      "#audio",
-      {
-        onEvent: (event: any) => {
-          const all = document.querySelectorAll(".abcjs-note,.abcjs-rest");
-          Array.from(all).forEach(
-            (note) => ((note as HTMLElement).style.fill = "black")
-          );
-          event.elements![0][0].style.fill = "#F97535";
+    synthControl.current.load("#audio", {
+      onEvent: (event: any) => {
+        const all = document.querySelectorAll(".abcjs-note,.abcjs-rest");
+        Array.from(all).forEach(
+          (note) => ((note as HTMLElement).style.fill = "black")
+        );
+        event.elements![0][0].style.fill = "#F97535";
 
-          const rect = event.elements![0][0].getBoundingClientRect();
-          const isVisible =
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <=
-              (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <=
-              (window.innerWidth || document.documentElement.clientWidth);
+        const rect = event.elements![0][0].getBoundingClientRect();
+        const isVisible =
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <=
+            (window.innerHeight || document.documentElement.clientHeight) &&
+          rect.right <=
+            (window.innerWidth || document.documentElement.clientWidth);
 
-          if (!isVisible) {
-            event.elements![0][0].scrollIntoView({
-              block: "center",
-              inline: "center",
-              behavior: "smooth",
-            });
-          }
-        },
-        onBeat: (beatNumber, totalBeats) => {
-          setProgress((beatNumber / totalBeats) * 100);
-          notifyProgressListeners((beatNumber / totalBeats) * 100);
-        },
+        if (!isVisible) {
+          event.elements![0][0].scrollIntoView({
+            block: "center",
+            inline: "center",
+            behavior: "smooth",
+          });
+        }
       },
-      {
-        displayLoop: true,
-        displayRestart: true,
-        displayPlay: true,
-        displayProgress: true,
-        displayWarp: true,
-      }
-    );
+      onBeat: (beatNumber, totalBeats) => {
+        setProgress((beatNumber / totalBeats) * 100);
+        notifyProgressListeners((beatNumber / totalBeats) * 100);
+      },
+    });
 
     synthetizer.current
       .init({
@@ -109,17 +103,8 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
       .then(() => {
         synthControl.current!.setTune(visualObject.current!, true, {
           soundFontVolumeMultiplier: 10,
-          // drum: "dddd 76 77 77 77 60 30 30 30",
-          // drumBars: 2,
-          // drumIntro: 0,
-          // qpm: 120,
-          // defaultQpm: 120,
         });
       });
-
-    editor.current = new Editor("abc", {
-      canvas_id: ref.current,
-    });
   };
 
   const getPieceId = () => {
@@ -162,6 +147,23 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
   const notifyProgressListeners = (newProgress: number) => {
     progressListeners.current.forEach((callback) => callback(newProgress));
   };
+
+  useEffect(() => {
+    return () => {
+      // Cleanup function to stop the synth and release resources
+      if (synthControl.current) {
+        synthControl.current = null;
+      }
+      if (synthetizer.current) {
+        synthetizer.current.stop();
+        synthetizer.current = null;
+      }
+      visualObject.current = null;
+      setProgress(0);
+      progressListeners.current = [];
+      setPieceId(undefined);
+    };
+  }, []);
 
   return (
     <SynthContext.Provider

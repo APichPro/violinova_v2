@@ -20,6 +20,7 @@ const Player = () => {
 
   return (
     <div className="bottom-0 w-full h-24 bg-pal-1 border-t-pal-2 border-2 flex flex-col item-center">
+      <div id="audio" className="hidden"></div>
       <ProgressBar />
       <div className="flex gap-4 justify-center">
         <Image
@@ -47,9 +48,8 @@ const Player = () => {
           />
           <button type="submit">Submit</button>
         </form>
-        {/* <button onClick={() => controlWarp(200)}>Test</button> */}
+        <button onClick={() => controlWarp(200)}>Test</button>
       </div>
-      <div id="synthcontrol" />
     </div>
   );
 };

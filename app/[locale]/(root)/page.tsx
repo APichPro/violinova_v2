@@ -5,21 +5,15 @@ import React from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import LoaderSpinner from "@/components/LoaderSpinner";
-import {useTranslations} from 'next-intl';
-
 
 const Dashboard = () => {
-  const t = useTranslations('HomePage');
   const allPieces = useQuery(api.pieces.getAllPieces);
 
   if (!allPieces) return <LoaderSpinner />;
 
-
-
   return (
     <div className="mt-9 flex-col gap-9">
       <section className="flex flex-col gap-5">
-      <h1>{t('title')}</h1>
         <div className="podcast_grid">
           {allPieces.map(({ _id, title, description }) => (
             <PieceCard

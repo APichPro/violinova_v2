@@ -4,10 +4,11 @@ import "./globals.css";
 import ConvexClerkProvider from "@/providers/ConvexClerkProvider";
 import { SynthProvider } from "@/providers/SynthProvider";
 import IsFetchingProvider from "@/providers/IsFetchingProvider";
-import { getMessages } from "next-intl/server";
-import { NextIntlClientProvider } from "next-intl";
+
 import { ThemesProvider } from "@/providers/ThemesProvider";
 import Image from "next/image";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, unstable_setRequestLocale } from "next-intl/server";
 
 const manrope = Manrope({ subsets: ["latin"] });
 
@@ -52,6 +53,10 @@ export const metadata: Metadata = {
   },
 };
 
+export function generateStaticParams() {
+  return ["en", "fr"].map((locale) => ({ locale }));
+}
+
 export default async function RootLayout({
   children,
   params: { locale },
@@ -59,29 +64,31 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: { locale: string };
 }>) {
+  unstable_setRequestLocale(locale);
   const messages = await getMessages();
 
   return (
-    <ConvexClerkProvider>
-      <html lang={locale} suppressHydrationWarning>
-        <NextIntlClientProvider messages={messages}>
+    <html lang={locale}>
+      <body className="relative">
+        <ConvexClerkProvider>
           <ThemesProvider>
             <IsFetchingProvider>
               <SynthProvider>
-                <body className={manrope.className}>{children}</body>
+                <NextIntlClientProvider locale={locale} messages={messages}>
+                  {children}
+                </NextIntlClientProvider>
                 <Image
                   fill
                   className="opacity-15 -z-10"
                   src="/images/bg.png"
-                  objectFit="contain"
-                  objectPosition="center"
+                  style={{ objectFit: "contain", objectPosition: "center" }}
                   alt="background"
                 />
               </SynthProvider>
             </IsFetchingProvider>
           </ThemesProvider>
-        </NextIntlClientProvider>
-      </html>
-    </ConvexClerkProvider>
+        </ConvexClerkProvider>
+      </body>
+    </html>
   );
 }

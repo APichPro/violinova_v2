@@ -1,15 +1,22 @@
 "use client";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useDropzone } from "react-dropzone";
 import { api } from "@/convex/_generated/api";
 import { useMutation } from "convex/react";
 import JSZip from "jszip";
 import $ from "jquery";
 import { importMusicXML, sendMIDIToWebService } from "@/lib/import";
-import { Editor } from "abcjs";
 import Image from "next/image";
+import { useSynth } from "@/providers/SynthProvider";
 
 const Create = () => {
+  const sheetRef = useRef(null);
   const [file, setFile] = useState<File>();
   const [abc, setAbc] = useState<string>();
   const [tracks, setTracks] = useState<Array<number>>([]);
@@ -19,6 +26,8 @@ const Create = () => {
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  const { initSynth } = useSynth();
 
   const XMLImport = (file: File) => {
     console.log("The file extension is mxl.");
@@ -99,40 +108,7 @@ const Create = () => {
 
     if (abc) {
       trackLists(abc);
-      new Editor("textArea", {
-        canvas_id: "sheetMusic",
-        abcjsParams: { responsive: "resize" },
-        synth: {
-          el: "#synthcontrol",
-          cursorControl: {
-            onEvent: (event: any) => {
-              const all = document.querySelectorAll(".abcjs-note,.abcjs-rest");
-              Array.from(all).forEach(
-                (note) => ((note as HTMLElement).style.fill = "black")
-              );
-              event.elements![0][0].style.fill = "#F97535";
-
-              const rect = event.elements![0][0].getBoundingClientRect();
-              const isVisible =
-                rect.top >= 0 &&
-                rect.left >= 0 &&
-                rect.bottom <=
-                  (window.innerHeight ||
-                    document.documentElement.clientHeight) &&
-                rect.right <=
-                  (window.innerWidth || document.documentElement.clientWidth);
-
-              if (!isVisible) {
-                event.elements![0][0].scrollIntoView({
-                  block: "center",
-                  inline: "center",
-                  behavior: "smooth",
-                });
-              }
-            },
-          },
-        },
-      });
+      initSynth(abc, sheetRef, "test");
     } else {
       load();
     }
@@ -166,20 +142,35 @@ const Create = () => {
           />
         </div>
       ) : (
-        <div className="flex h-full w-full gap-4">
-          <div className="w-full h-full overflow-y-scroll">
-            <div id="sheetMusic"></div>
+        <div className="flex flex-col h-full w-full gap-4">
+          <div className="flex w-full gap-4 justify-center ">
+            {tracks.map((track) => {
+              return (
+                <button
+                  onClick={() => {
+                    setAbc(test(abc!, track));
+                  }}
+                  key={track}
+                  className="bg-pal-3 border-pal-2 border-2 rounded-lg"
+                >
+                  Track {track.toString()}
+                </button>
+              );
+            })}
+            <button onClick={() => onSubmit()}>Publish</button>
           </div>
-          <div className="flex-col flex justify-center h-full w-full">
-            <textarea
+          <div className="w-full h-full overflow-y-scroll">
+            <div ref={sheetRef}></div>
+          </div>
+          {/* <div className="flex-col flex justify-center h-full w-full"> */}
+          {/* <textarea
               title="text"
-              id="textArea"
+              id="editor"
               defaultValue={abc}
               className="w-full h-1/2 resize-none bg-pal-3 border-pal-2 border-2 rounded-lg p-4 text-2xl"
-            ></textarea>
-            <div className="flex w-full gap-4 justify-center ">
+            ></textarea> */}
+          {/* <div className="flex w-full gap-4 justify-center ">
               {tracks.map((track) => {
-                console.log(track);
                 return (
                   <button
                     onClick={() => {
@@ -193,8 +184,8 @@ const Create = () => {
                 );
               })}
               <button onClick={() => onSubmit()}>Publish</button>
-            </div>
-          </div>
+            </div> */}
+          {/* </div> */}
         </div>
       )}
     </div>
