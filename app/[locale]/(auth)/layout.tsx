@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -9,7 +9,7 @@ export default function RootLayout({
     <main className="relative h-screen w-full">
       <div className=" absolute size-full">
         <Image
-          src="/images/bg-img.png"
+          src="/images/bg.png"
           alt="background"
           fill
           className="size-full"

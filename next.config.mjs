@@ -1,6 +1,14 @@
-import { hostname } from 'os';
+import withPWAInit from "@ducanh2912/next-pwa";
+import createNextIntlPlugin from 'next-intl/plugin';
+ 
+const withNextIntl = createNextIntlPlugin();
+
+const withPWA = withPWAInit({
+  dest: "public",
+});
 
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   images: {
     remotePatterns: [{
@@ -14,4 +22,4 @@ const nextConfig = {
   }
 };
 
-export default nextConfig;
+export default withPWA(withNextIntl({nextConfig}));

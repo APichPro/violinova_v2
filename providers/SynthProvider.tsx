@@ -6,6 +6,7 @@ import {
   TuneObject,
   synth,
   renderAbc,
+  Editor,
 } from "abcjs";
 
 interface SynthContextType {
@@ -37,6 +38,8 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
   const synthetizer = useRef<MidiBuffer | null>(null);
   const synthControl = useRef<SynthObjectController | null>(null);
   const visualObject = useRef<TuneObject | null>(null);
+  const editor = useRef<Editor | null>(null);
+
   const [progress, setProgress] = useState<number>(0);
   const progressListeners = useRef<Function[]>([]);
   const [pieceId, setPieceId] = useState<string>();
@@ -113,6 +116,10 @@ export const SynthProvider: React.FC<{ children: React.ReactNode }> = ({
           // defaultQpm: 120,
         });
       });
+
+    editor.current = new Editor("abc", {
+      canvas_id: ref.current,
+    });
   };
 
   const getPieceId = () => {

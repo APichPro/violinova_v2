@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config = {
-  darkMode: ["class"],
+  darkMode: "class",
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -49,14 +49,13 @@ const config = {
           4: "rgba(249, 117, 53, 0.64)",
           5: "rgba(249, 117, 53, 0.4)",
         },
-        palette: {
-          1: "#F7F3F0",
-          2: "#D3CABE",
-          3: "#D9D0C6",
+        pal: {
+          1: "#D6D6D6",
+          2: "#8F8F8F",
+          3: "rgba(214, 214, 214, 0.64)",
           4: "#E5E0DA",
           5: "#BCB2A4",
         },
-       
       },
       backgroundImage: {
         "nav-focus":

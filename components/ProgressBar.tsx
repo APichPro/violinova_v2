@@ -68,7 +68,7 @@ const ProgressBar = () => {
   return (
     <div
       ref={progressBarRef}
-      className=" bg-palette-5 h-4 text-center relative justify-center items-center w-full"
+      className="bg-orange-2 h-2 w-1/2 mx-auto rounded-b-lg relative"
       onClick={handleClick}
     >
       {/* <h1 className="absolute w-full text-center">{`${progress} / ${Math.floor(
@@ -84,7 +84,7 @@ const ProgressBar = () => {
         style={{ width: `${progress}%` }}
       >
         <div
-          className="absolute z-10 h-full w-8 rounded-full bg-orange-1 text-center flex items-center justify-center cursor-pointer hover:h-8"
+          className=" h-full absolute z-10 w-8 rounded-full bg-orange-1 text-center flex items-center justify-center cursor-pointer hover:h-8"
           style={{ left: `calc(${progress}% - 1.25rem)` }}
           onMouseDown={handleMouseDown}
         />

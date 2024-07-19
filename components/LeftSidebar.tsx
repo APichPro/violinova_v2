@@ -6,17 +6,18 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { sidebarLinks } from "@/constants";
 import { usePathname, useRouter } from "next/navigation";
+import ThemeSwitch from "./ThemeSwitch";
 
 const LeftSidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
 
   return (
-    <section className="bg-palette-4 relative left-0 top-0 flex w-fit h-full flex-col  justify-between border-none text-brown-1 max-md:hidden lg:w-[270px] lg:pl-8">
-      <nav className="flex flex-col gap-6">
+    <section className="relative left-0 flex w-24 h-[50em] flex-col bg-pal-1 border-pal-2 border-2 rounded-r-lg">
+      <nav className="flex justify-center items-center flex-col gap-16 h-full">
         <Link
           href="/"
-          className=" flex cursor-pointer items-center gap-1 pt-8 max-lg:justify-center"
+          className=" flex cursor-pointer items-center gap-1 pt-4 max-lg:justify-center"
         >
           <Image
             src="/icons/logo.svg"
@@ -31,18 +32,12 @@ const LeftSidebar = () => {
             pathname === route || pathname.startsWith(`${route}/`);
 
           return (
-            <Link
-              key={label}
-              href={route}
-              className={cn(
-                "flex gap-3 items-center py-4 max-lg:px-4 justify-center lg:justify-start",
-                { "bg-nav-focus border-r-4 border-orange-1": isActive }
-              )}
-            >
+            <Link key={label} href={route} className="cursor-pointer">
               <Image src={icon} alt={label} width={48} height={48} />
             </Link>
           );
         })}
+        {/* <ThemeSwitch /> */}
       </nav>
     </section>
   );

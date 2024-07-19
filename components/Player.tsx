@@ -2,10 +2,9 @@
 import { useRef, useState } from "react";
 import { useSynth } from "@/providers/SynthProvider";
 import Image from "next/image";
-import Draggable from "react-draggable";
+import ProgressBar from "./ProgressBar";
 
 const Player = () => {
-  const draggableRef = useRef(null);
   const [bpm, setBpm] = useState<number>(100);
 
   const { controlWarp, controlPlay, controlRestart } = useSynth();
@@ -20,11 +19,8 @@ const Player = () => {
   };
 
   return (
-    // <Draggable nodeRef={draggableRef} defaultPosition={{ x: 0, y: 0 }}>
-    <div
-      ref={draggableRef}
-      className="z-10 glassmorphism-player flex flex-col items-center justify-between px-4 max-md:justify-center max-md:gap-5 md:px-12 top-0 rounded-full absolute"
-    >
+    <div className="bottom-0 w-full h-24 bg-pal-1 border-t-pal-2 border-2 flex flex-col item-center">
+      <ProgressBar />
       <div className="flex gap-4 justify-center">
         <Image
           src="/icons/player-skip-back.svg"
@@ -53,10 +49,8 @@ const Player = () => {
         </form>
         {/* <button onClick={() => controlWarp(200)}>Test</button> */}
       </div>
-      <div id="audio" className="hidden" />
+      <div id="synthcontrol" />
     </div>
-
-    // </Draggable>
   );
 };
 
